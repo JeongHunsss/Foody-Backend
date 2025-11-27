@@ -17,7 +17,7 @@ public class UserResponse {
     private double height;  
     private double weight;
     private String gender;
-    private int activityLevel;
+    private Integer activityLevel;
     private String role;          // "ROLE_USER"
 
     public UserResponse(User user) {
