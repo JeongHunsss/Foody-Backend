@@ -1,4 +1,4 @@
-package com.ssafy.foody.global.auth.jwt;
+package com.ssafy.foody.common.auth.jwt;
 
 import java.io.IOException;
 
@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			if (dbUser != null) {
 				UserDetails principal = User.builder()
 						.username(dbUser.getId())
-						.password(dbUser.getPassword())
+						.password("")
 						.authorities(dbUser.getRole())
 						.build();
 
