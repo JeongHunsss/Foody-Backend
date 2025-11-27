@@ -25,9 +25,10 @@ public class FoodController {
 	@GetMapping("/list")
 	public ResponseEntity<List<FoodInfo>> getFoodList (
 			@RequestParam(value = "page", defaultValue = "1") int page
-			)throws Exception {
+			){
+		
 		List<FoodInfo> list = foodService.foodList(page);
-//		log.info("조회된 데이터 {} " ,list);
+		log.debug("조회된 데이터 {} " ,list);
 		return ResponseEntity.ok(list);
 	}
 		

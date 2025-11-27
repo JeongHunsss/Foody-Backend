@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Foods {
+public class Food {
 	private String code; //음식 코드
 	private String name; // 음식 이름
 	private String category;

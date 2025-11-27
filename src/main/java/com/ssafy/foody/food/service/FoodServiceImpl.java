@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.ssafy.foody.food.domain.Foods;
+import com.ssafy.foody.food.domain.Food;
 import com.ssafy.foody.food.dto.FoodInfo;
 import com.ssafy.foody.food.mapper.FoodMapper;
 
@@ -27,7 +27,7 @@ public class FoodServiceImpl implements FoodService {
 		if(page < 1) page = 1;
 		int offset = (page-1) * LIST_LIMIT;
 		
-		List<Foods> voList = foodMapper.foodList(offset, 50);
+		List<Food> voList = foodMapper.foodList(offset, LIST_LIMIT);
 		
 		return voList.stream().map(FoodInfo::new).collect(Collectors.toList());
 	}
