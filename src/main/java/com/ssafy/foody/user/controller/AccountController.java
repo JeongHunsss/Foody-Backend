@@ -32,7 +32,7 @@ public class AccountController {
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody @Valid SignupRequest request) {
         log.info("회원가입 요청: {}", request.getId());
-        log.debug("회원가입 request: " + request);
+        log.debug("회원가입 request: {}", request);
         accountService.signup(request);
         return ResponseEntity.status(HttpStatus.CREATED).body("회원가입이 완료되었습니다.");
     }
