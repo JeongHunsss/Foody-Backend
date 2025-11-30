@@ -31,5 +31,16 @@ public class FoodServiceImpl implements FoodService {
 		
 		return voList.stream().map(FoodInfo::new).collect(Collectors.toList());
 	}
+	
+	//음식 검색
+	@Override
+	public List<FoodInfo> foodSearch(String name) {
+		List<Food> food = foodMapper.foodSearch(name);
+		
+		if(food == null) {
+			return null;
+		}
+		return food.stream().map(FoodInfo::new).collect(Collectors.toList());
+	}
 
 }

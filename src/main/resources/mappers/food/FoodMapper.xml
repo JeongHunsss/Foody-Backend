@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ssafy.foody.food.mapper.FoodMapper">
-	<select id = "foodList" parameterType="food">
+	<select id = "foodList" resultType="food">
 		select code, name, category, standard, kcal,
 		carb_g carb,
 		protein_g protein,
@@ -13,5 +13,16 @@
 		from foods
 		order by name asc
 		limit #{limit} offset #{offset}
+	</select>
+	
+	<select id = "foodSearch" parameterType="String" resultType="food">
+		select code, name, category, standard, kcal,
+			carb_g carb,
+			protein_g protein,
+			fat_g fat,
+			sugar_g sugar,
+			natrium_g natrium
+			from foods
+			where name like concat ('%', #{name}, '%')
 	</select>
 </mapper>

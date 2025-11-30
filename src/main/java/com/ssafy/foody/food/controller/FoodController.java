@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nimbusds.oauth2.sdk.Response;
 import com.ssafy.foody.food.dto.FoodInfo;
 import com.ssafy.foody.food.service.FoodService;
 
@@ -29,6 +31,14 @@ public class FoodController {
 		
 		List<FoodInfo> list = foodService.foodList(page);
 		log.debug("조회된 데이터 {} " ,list);
+		return ResponseEntity.ok(list);
+	}
+	
+	@PostMapping("/search")
+	public ResponseEntity<List<FoodInfo>> searchFood (
+			@RequestParam(value = "foodname") String foodname
+			) {
+		List<FoodInfo> list = foodService.foodSearch(foodname);
 		return ResponseEntity.ok(list);
 	}
 		
