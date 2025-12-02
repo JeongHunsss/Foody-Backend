@@ -3,6 +3,7 @@ package com.ssafy.foody.user.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,8 +27,8 @@ public class UserController {
     private final UserService userService;
 
     // 내 정보 조회
-    @GetMapping("/info")
-    public ResponseEntity<UserResponse> getInfo(@AuthenticationPrincipal UserDetails userDetails) {
+    @GetMapping
+    public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal UserDetails userDetails) {
         String userId = userDetails.getUsername(); 
         log.info("내 정보 조회 요청: {}", userId);
 
@@ -41,8 +42,8 @@ public class UserController {
     
 
     // 내 정보 수정
-    @PatchMapping("/info")
-    public ResponseEntity<String> updateInfo(
+    @PatchMapping
+    public ResponseEntity<String> updateUser(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody @Valid UserUpdateRequest request
     ) {
@@ -52,5 +53,17 @@ public class UserController {
         userService.updateUserInfo(userId, request);
         
         return ResponseEntity.ok("정보 수정이 완료되었습니다.");
+    }
+    
+    
+    // 회원 탈퇴
+    @DeleteMapping
+    public ResponseEntity<String> deleteUser(@AuthenticationPrincipal UserDetails userDetails) {
+        String userId = userDetails.getUsername();
+        log.info("회원 탈퇴 요청: {}", userId);
+
+        userService.deleteUser(userId);
+
+        return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
     }
 }
