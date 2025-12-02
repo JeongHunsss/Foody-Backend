@@ -4,7 +4,17 @@ import com.ssafy.foody.user.dto.UserResponse;
 import com.ssafy.foody.user.dto.UserUpdateRequest;
 
 public interface UserService {
-	boolean isIdDuplicate(String id); // id 중복 체크
-	UserResponse findById(String id); // 내 정보 조회 (id)
-    void updateUserInfo(String userId, UserUpdateRequest request); // 회원 정보 수정
+
+	// id 중복 체크
+	boolean isIdDuplicate(String id);
+
+	// 내 정보 조회 (id)
+	UserResponse findById(String userId);
+
+	// 회원 정보 수정
+	void updateUserInfo(String userId, UserUpdateRequest request);
+
+	// 회원 탈퇴
+	void deleteUser(String userId);
+
 }

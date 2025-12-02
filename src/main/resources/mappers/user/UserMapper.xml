@@ -53,6 +53,10 @@
 		</set>
 		WHERE id = #{id}
 	</update>
+	
+	<delete id="deleteUser" parameterType="string">
+        DELETE FROM users WHERE id = #{id}
+    </delete>
 
 	<select id="findById" resultType="User">
 		SELECT

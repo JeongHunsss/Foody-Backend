@@ -28,8 +28,8 @@ public class UserServiceImpl implements UserService {
     }
 
     // 내 정보 조회 (ID로 찾기)
-    public UserResponse findById(String id) {
-        User user = userMapper.findById(id);
+    public UserResponse findById(String userId) {
+        User user = userMapper.findById(userId);
         if (user == null) {
             throw new IllegalArgumentException("해당 유저를 찾을 수 없습니다.");
         }
@@ -64,5 +64,16 @@ public class UserServiceImpl implements UserService {
             userMapper.updateStdInfo(stdInfo);
         }
     }
-    // public void deleteUser(String id) { ... }
+    
+    @Override
+    @Transactional
+    public void deleteUser(String userId) {
+        // 존재하는 유저인지 확인
+        if (!userMapper.existsById(userId)) {
+            throw new IllegalArgumentException("존재하지 않는 유저입니다.");
+        }
+
+        // 유저 삭제
+		userMapper.deleteUser(userId);
+	}
 }
