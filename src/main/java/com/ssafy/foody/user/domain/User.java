@@ -27,4 +27,6 @@ public class User {
     private String provider;
     private String providerId;
     private LocalDateTime createdAt;
+    
+    StdInfo stdInfo; // 표준 정보
 }
