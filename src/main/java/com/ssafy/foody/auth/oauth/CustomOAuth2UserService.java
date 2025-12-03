@@ -82,8 +82,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 			user = User.builder()
 					.id(generatedId)
-					.name(name != null ? name : "소셜회원") // 구글 닉네임
+					.name(name != null ? name : "이름 미설정") // 닉네임
 					.email(email)
+					.isDiabetes(false) // 소셜 가입 시 기본값 false로 설정
 					.role("ROLE_GUEST") // GUEST는 추후에 추가 정보 입력
 					.provider(provider)
 					.providerId(providerId)
