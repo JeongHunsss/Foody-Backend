@@ -29,8 +29,8 @@
 		FROM foods
 
 		<where>
-			<if test="keyWord != null and keyWord != ''">
-				AND name LIKE CONCAT('%', #{keyWord}, '%')
+			<if test="keyword != null and keyword != ''">
+				AND name LIKE CONCAT('%', #{keyword}, '%')
 			</if>
 			<if test="category != null and category != ''">
 				AND category LIKE CONCAT('%', #{category}, '%')

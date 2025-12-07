@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 public class AccountController {
 
     private final AccountService accountService;
-    private final UserService userService; // ID 중복 체크를 위해 필요
     
     // 회원가입
     @PostMapping("/signup")
@@ -51,7 +50,7 @@ public class AccountController {
     // 아이디 중복 체크
     @GetMapping("/check-id")
     public ResponseEntity<Boolean> checkId(@RequestParam String id) {
-        boolean exists = userService.isIdDuplicate(id);
+        boolean exists = accountService.isIdDuplicate(id);
         return ResponseEntity.ok(exists); 
     }
 }
