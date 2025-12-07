@@ -90,4 +90,9 @@ public class AccountServiceImpl implements AccountService {
         
         return response;
     }
+    
+    // ID 중복 체크
+    public boolean isIdDuplicate(String id) {
+        return userMapper.existsById(id);
+    }
 }
