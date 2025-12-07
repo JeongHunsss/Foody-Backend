@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.ssafy.foody.auth.filter.ReportAccessFilter;
 import com.ssafy.foody.auth.handler.OAuth2SuccessHandler;
 import com.ssafy.foody.auth.jwt.JwtAuthenticationFilter;
 import com.ssafy.foody.auth.jwt.JwtTokenProvider;
@@ -40,12 +41,12 @@ public class SecurityConfig {
 
 				// 요청 권한 설정 (requestMatchers 메서드 사용)
 				.authorizeHttpRequests(auth -> auth
-						// food oauth 비활성화 코드
-						.requestMatchers("/food/**").permitAll()
 						// Swagger 관련 주소
 						.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
 						// 주소 허용
-						.requestMatchers("/error/**", "/account/**", "/oauth2/**", "/login/**", "/favicon.ico").permitAll()
+						.requestMatchers("/error/**", "/account/**", "/oauth2/**", "/login/**", "/food/**",
+								"/favicon.ico")
+						.permitAll()
 						// 권한 필요
 						.anyRequest().authenticated())
 
@@ -55,7 +56,9 @@ public class SecurityConfig {
 
 				// JWT 필터
 				.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userMapper),
-						UsernamePasswordAuthenticationFilter.class);
+						UsernamePasswordAuthenticationFilter.class)
+				// GUEST 레포트 접근 제한 필터
+				.addFilterAfter(new ReportAccessFilter(), JwtAuthenticationFilter.class);
 
 		return http.build();
 	}
