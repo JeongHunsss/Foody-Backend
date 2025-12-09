@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class FoodAiServiceImpl implements FoodAiService {
+public class AiFoodServiceImpl implements AiFoodService {
 	
 	private final RestTemplate restTemplate;
 	
