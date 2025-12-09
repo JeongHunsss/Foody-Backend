@@ -134,6 +134,15 @@
 		WHERE
 		level = #{level}
 	</select>
+	
+		<select id="getActivityDesc" parameterType="int"
+		resultType="string">
+		SELECT
+		description
+		FROM activity_levels
+		WHERE
+		level = #{level}
+	</select>
 
 	<resultMap id="userWithStdInfoMap" type="User">
 		<id property="id" column="id" />
