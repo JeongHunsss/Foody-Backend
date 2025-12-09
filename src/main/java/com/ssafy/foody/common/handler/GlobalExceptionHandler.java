@@ -50,6 +50,14 @@ public class GlobalExceptionHandler {
         
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("데이터베이스 처리 중 오류가 발생했습니다. (입력값 확인 필요)");
     }
+    
+    // 런타임 에러
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
+        log.error("Runtime Error: {}", ex.getMessage());
+        // 적은 메시지를 그대로 반환
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+    }
 
     // 그 외 모든 에러
     @ExceptionHandler(Exception.class)
