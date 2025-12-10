@@ -64,5 +64,46 @@
 		NOW()
 		)
 	</insert>
+	
+	<insert id="insertFavorite" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO favorites (user_id, food_code, user_food_code)
+        VALUES (
+            #{userId}, 
+            #{foodCode}, #{userFoodCode} )
+    </insert>
+    
+    <delete id="deleteFavorite">
+        DELETE FROM favorites WHERE id = #{favoriteId}
+    </delete>
+    
+    <select id="checkFavoriteExists" resultType="Integer">
+        SELECT id FROM favorites
+        WHERE user_id = #{userId}
+        <if test="foodCode != null"> AND food_code = #{foodCode} </if>
+        <if test="userFoodCode != null"> AND user_food_code = #{userFoodCode} </if>
+        LIMIT 1
+    </select>
+    
+    <select id="selectFavoriteList" resultType="FavoriteResponse">
+        SELECT 
+            fav.id AS favoriteId,
+            fav.food_code AS foodCode,
+            NULL AS userFoodCode,
+            f.name, f.standard, f.kcal, f.carb_g AS carb, f.protein_g AS protein, f.fat_g AS fat, f.sugar_g AS sugar, f.natrium_g AS natrium
+        FROM favorites fav
+        JOIN foods f ON fav.food_code = f.code
+        WHERE fav.user_id = #{userId}
+
+        UNION ALL
+
+        SELECT 
+            fav.id AS favoriteId,
+            NULL AS foodCode,
+            fav.user_food_code AS userFoodCode,
+            uf.name, uf.standard, uf.kcal, uf.carb_g AS carb, uf.protein_g AS protein, uf.fat_g AS fat, uf.sugar_g AS sugar, uf.natrium_g AS natrium
+        FROM favorites fav
+        JOIN user_foods uf ON fav.user_food_code = uf.code
+        WHERE fav.user_id = #{userId}
+    </select>
 
 </mapper>

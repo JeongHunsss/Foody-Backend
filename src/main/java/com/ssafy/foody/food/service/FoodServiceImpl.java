@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.foody.food.domain.Favorite;
+import com.ssafy.foody.food.dto.FavoriteResponse;
 import com.ssafy.foody.food.dto.FoodResponse;
 import com.ssafy.foody.food.mapper.FoodMapper;
 
@@ -38,5 +40,46 @@ public class FoodServiceImpl implements FoodService {
 
 	    return foodMapper.selectFoodList(offset, LIST_LIMIT, keyword, category);
 	}
+	
+	@Override
+    @Transactional
+    public void addFavorite(String userId, String foodCode, Integer userFoodCode) {
+        // 유효성 검사
+        if (foodCode == null && userFoodCode == null) {
+            throw new IllegalArgumentException("찜할 음식 정보가 없습니다.");
+        }
+        
+        // 유효성 검사
+        if (foodCode != null && userFoodCode != null) {
+            throw new IllegalArgumentException("찜할 음식 정보가 잘못 됐습니다.");
+        }
+
+        // 중복 검사 (이미 찜했는지)
+        Integer existId = foodMapper.checkFavoriteExists(userId, foodCode, userFoodCode);
+        if (existId != null) {
+            throw new IllegalArgumentException("이미 찜한 음식입니다."); // 또는 그냥 리턴해서 무시
+        }
+
+        // 찜
+        Favorite favorite = Favorite.builder()
+                .userId(userId)
+                .foodCode(foodCode)          // DB 음식이면 값 있음, 아니면 null
+                .userFoodCode(userFoodCode)  // 사용자 음식이면 값 있음, 아니면 null
+                .build();
+
+        foodMapper.insertFavorite(favorite);
+    }
+
+    @Override
+    @Transactional
+    public void deleteFavorite(int favoriteId) {
+        foodMapper.deleteFavorite(favoriteId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<FavoriteResponse> getFavoriteList(String userId) {
+        return foodMapper.selectFavoriteList(userId);
+    }
 
 }

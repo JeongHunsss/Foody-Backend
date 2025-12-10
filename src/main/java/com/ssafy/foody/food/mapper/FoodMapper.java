@@ -5,8 +5,10 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.ssafy.foody.food.domain.Favorite;
 import com.ssafy.foody.food.domain.Food;
 import com.ssafy.foody.food.domain.UserFood;
+import com.ssafy.foody.food.dto.FavoriteResponse;
 import com.ssafy.foody.food.dto.FoodResponse;
 
 @Mapper
@@ -21,4 +23,18 @@ public interface FoodMapper {
 	
 	// 사용자 입력 음식 저장
     void saveUserFood(UserFood userFood);
+    
+    // 찜하기
+    void insertFavorite(Favorite favorite);
+
+    // 찜 취소
+    void deleteFavorite(int favoriteId);
+
+    // 찜 목록 조회
+    List<FavoriteResponse> selectFavoriteList(String userId);
+    
+    // 중복 찜 방지용 확인
+    Integer checkFavoriteExists(@Param("userId") String userId, 
+                                @Param("foodCode") String foodCode, 
+                                @Param("userFoodCode") Integer userFoodCode);
 }
