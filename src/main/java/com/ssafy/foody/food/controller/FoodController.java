@@ -4,14 +4,20 @@ import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.foody.food.dto.AiFoodResponse;
+import com.ssafy.foody.food.dto.FavoriteRequest;
+import com.ssafy.foody.food.dto.FavoriteResponse;
 import com.ssafy.foody.food.dto.FoodResponse;
 import com.ssafy.foody.food.service.AiFoodService;
 import com.ssafy.foody.food.service.FoodService;
@@ -64,4 +70,51 @@ public class FoodController {
         return ResponseEntity.ok(result);
     }
 		
+    /**
+     * 찜 목록 추가
+     * POST /food/auth/favorite
+     */
+    @PostMapping("/auth/favorite")
+    public ResponseEntity<String> addFavorite(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody FavoriteRequest request
+    ) {
+        if (userDetails == null) return ResponseEntity.status(401).build();
+
+        foodService.addFavorite(
+                userDetails.getUsername(), 
+                request.getFoodCode(), 
+                request.getUserFoodCode()
+        );
+        
+        return ResponseEntity.ok("찜 목록에 추가되었습니다.");
+    }
+
+    /**
+     * 찜 목록 삭제
+     * DELETE /food/auth/favorite?favoriteId=...
+     */
+    @DeleteMapping("/auth/favorite")
+    public ResponseEntity<String> deleteFavorite(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam int favoriteId
+    ) {
+        if (userDetails == null) return ResponseEntity.status(401).build();
+        
+        foodService.deleteFavorite(favoriteId);
+        return ResponseEntity.ok("찜 목록에서 삭제되었습니다.");
+    }
+
+    /**
+     * 찜 목록 조회
+     * GET /food/auth/favorite
+     */
+    @GetMapping("/auth/favorite")
+    public ResponseEntity<List<FavoriteResponse>> getFavoriteList(
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        if (userDetails == null) return ResponseEntity.status(401).build();
+
+        return ResponseEntity.ok(foodService.getFavoriteList(userDetails.getUsername()));
+    }
 }
