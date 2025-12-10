@@ -18,6 +18,7 @@ public class AiReportRequest {
     // 유저 정보
     private StdInfo stdInfo;                  // 유저 표준 정보
     private String userActivityLevelDesc;     // 유저 활동량 설명
+    private boolean userIsDiaBetes; 		  // 유저 당뇨 여부
 
     // 하루치 종합 정보
     private double dayTotalKcal;
