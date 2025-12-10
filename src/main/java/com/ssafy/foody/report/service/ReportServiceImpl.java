@@ -158,7 +158,7 @@ public class ReportServiceImpl implements ReportService {
 							foodMapper.saveUserFood(customFood);
 							userFoodCode = customFood.getCode();
 						}
-
+																
 						// 비례식 계산: (먹은 양 / 기준 양) * 영양소
 						// item.getWeight()는 사용자가 실제 먹은 양(g 또는 ml)
 						double ratio = item.getEatenWeight() / baseStandard;
@@ -241,9 +241,10 @@ public class ReportServiceImpl implements ReportService {
             try {
                 // AI 요청 DTO 생성
                 AiReportRequest aiRequest = AiReportRequest.builder()
+                		// 유저 정보
                         .stdInfo(std)
-                        // 활동 레벨 설명
                         .userActivityLevelDesc(userMapper.getActivityDesc(user.getActivityLevel()))
+                        .userIsDiaBetes(user.getIsDiabetes())
                         
                         // 하루 총합
                         .dayTotalKcal(roundTwo(dayTotalKcal))
