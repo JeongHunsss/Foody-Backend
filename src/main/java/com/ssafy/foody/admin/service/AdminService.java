@@ -1,4 +1,4 @@
-package com.ssafy.foody.auth.admin.service;
+package com.ssafy.foody.admin.service;
 
 public interface AdminService {
 	//권한 수정

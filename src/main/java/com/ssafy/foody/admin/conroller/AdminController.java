@@ -1,4 +1,4 @@
-package com.ssafy.foody.auth.admin.conroller;
+package com.ssafy.foody.admin.conroller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.foody.auth.admin.dto.UpdateRoleRequest;
-import com.ssafy.foody.auth.admin.service.AdminService;
+import com.ssafy.foody.admin.dto.UpdateRoleRequest;
+import com.ssafy.foody.admin.service.AdminService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

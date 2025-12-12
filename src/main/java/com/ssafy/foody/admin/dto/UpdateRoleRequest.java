@@ -1,4 +1,4 @@
-package com.ssafy.foody.auth.admin.dto;
+package com.ssafy.foody.admin.dto;
 
 import lombok.Data;
 

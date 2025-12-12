@@ -24,7 +24,7 @@ public class AdminAccessFilter extends OncePerRequestFilter {
         String uri = request.getRequestURI();
 
         //관리자 경로만 필터로 막기
-        if (uri.startsWith("/admin/")) {
+        if (uri.startsWith("/admin")) {
 
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 

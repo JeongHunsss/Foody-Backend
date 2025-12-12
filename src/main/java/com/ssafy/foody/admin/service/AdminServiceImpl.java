@@ -1,4 +1,4 @@
-package com.ssafy.foody.auth.admin.service;
+package com.ssafy.foody.admin.service;
 
 import org.springframework.stereotype.Service;
 
