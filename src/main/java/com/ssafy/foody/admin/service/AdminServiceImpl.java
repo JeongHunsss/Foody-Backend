@@ -2,14 +2,19 @@ package com.ssafy.foody.admin.service;
 
 import org.springframework.stereotype.Service;
 
+import com.ssafy.foody.food.dto.FoodRequest;
+import com.ssafy.foody.food.mapper.FoodMapper;
 import com.ssafy.foody.user.mapper.UserMapper;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AdminServiceImpl implements AdminService {
 	private final UserMapper userMapper;
+	private final FoodMapper foodMapper;
 	
 	public void updateUserRole(String userId, String role) {
 		
@@ -42,6 +47,24 @@ public class AdminServiceImpl implements AdminService {
         }
 
         return role;
+	}
+
+	@Override
+	
+	public void addFood(FoodRequest food) {
+		// 유호성 검사
+		if (food == null) {
+			throw new IllegalArgumentException("등록할 음식 정보가 없습니다.");
+		}
+		// 중복 검사 (이미 등록된 음식정보인지)
+		int existCode = foodMapper.checkFoodExists(food.getCode());
+		log.info("중복 값 확인 : {}", existCode);
+		if (existCode > 0) {
+			throw new IllegalArgumentException("이미 등록된 음식 코드입니다");
+		}
+		
+		//음식 등록
+		foodMapper.addFood(food);
 	}
 
 }
