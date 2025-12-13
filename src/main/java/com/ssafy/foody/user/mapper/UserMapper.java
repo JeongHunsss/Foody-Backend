@@ -50,8 +50,8 @@ public interface UserMapper {
     int updateRole(@Param("id") String id, @Param("role") String role);
     
     // 활동 레벨 (Activity level) 수정 (관리자(ADMIN 전용))
-    int updateActivityLevel(UpdateActivityLevelRequest request);
+    int updateActivityLevelByLevel(UpdateActivityLevelRequest request);
     
-    // 활동 레벨 리스트 조회 (관리자(ADMIN 전용))
-    List<ActivityLevelResponse> selectActivityLevel();
+    // 활동 레벨 전체 조회 (관리자(ADMIN 전용))
+    List<ActivityLevelResponse> findAllActivityLevels();
 }

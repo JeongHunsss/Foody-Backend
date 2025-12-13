@@ -17,8 +17,8 @@ public interface AdminService {
 	void deleteFood(String code);
 	
 	//Activity Level 수정
-	void updateAcitivityLevel(UpdateActivityLevelRequest activity);
+	void updateActivityLevelByLevel(UpdateActivityLevelRequest activity);
 	
 	//Activity Level 전체 조회
-	List<ActivityLevelResponse> getActivityLevelList();
+	List<ActivityLevelResponse> findAllActivityLevels();
 }

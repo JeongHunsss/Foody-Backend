@@ -3,7 +3,6 @@ package com.ssafy.foody.admin.conroller;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.foody.admin.dto.ActivityLevelResponse;
@@ -21,7 +19,6 @@ import com.ssafy.foody.admin.dto.UpdateActivityLevelRequest;
 import com.ssafy.foody.admin.dto.UpdateRoleRequest;
 import com.ssafy.foody.admin.service.AdminService;
 import com.ssafy.foody.food.dto.FoodRequest;
-import com.ssafy.foody.food.service.FoodService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -76,14 +73,14 @@ public class AdminController {
 	
 	/**
 	 * Activity_level 테이블 value(가중치) description(설명) 수정
-	 * POST /admin/activitylv
+	 * POST /admin/activitylevel
 	 * 요청 Body(raw)
 	 * level, value, description
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("activitylevel")
 	public ResponseEntity<String> updateActivityLevel(@Valid @RequestBody UpdateActivityLevelRequest request) {
-		adminService.updateAcitivityLevel(request);
+		adminService.updateActivityLevelByLevel(request);
 		return ResponseEntity.ok("Activity level이 성공적으로 수정되었습니다");
 	}
 	
@@ -93,9 +90,9 @@ public class AdminController {
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("activitylevel")
-	public ResponseEntity<List<ActivityLevelResponse>> activityLevelList() {
-		List<ActivityLevelResponse> list = adminService.getActivityLevelList();
-		log.debug("조호된 활동 레벨 : {}", list);
+	public ResponseEntity<List<ActivityLevelResponse>> selectActivityLevel() {
+		List<ActivityLevelResponse> list = adminService.findAllActivityLevels();
+		log.debug("조회된 활동 레벨 : {}", list);
 		//데이터가 없으면 204 반환
 		if(list == null || list.isEmpty()) {
 			return ResponseEntity.noContent().build();

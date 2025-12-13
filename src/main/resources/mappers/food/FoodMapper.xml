@@ -113,7 +113,7 @@
     	, #{carb}, #{protein}, #{fat}, #{sugar}, #{natrium})
     </insert>
     
-    <delete id="deleteFood">
+    <delete id="deleteFoodByCode">
     	DELETE FROM foods
     	WHERE code = #{code}
     </delete>

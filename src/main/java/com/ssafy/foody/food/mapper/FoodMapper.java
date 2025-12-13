@@ -43,6 +43,6 @@ public interface FoodMapper {
     void addFood(FoodRequest food);
     
     //Food Table 에 음식 정보 삭제 (관리자 권한 (ADMIN))
-    void deleteFood(@Param("code") String code);
+    void deleteFoodByCode(@Param("code") String code);
     
 }

@@ -207,14 +207,14 @@
         WHERE id = #{userId}
     </update>
     
-    <update id = "updateActivityLevel" parameterType="UpdateActivityLevelRequest">
+    <update id = "updateActivityLevelByLevel" parameterType="UpdateActivityLevelRequest">
     	UPDATE activity_levels
     	SET value = #{value}
     	, description = #{description}
     	WHERE level = #{level}
     </update>
     
-    <select id = "selectActivityLevel" resultType = "activityLevelResponse">
+    <select id = "findAllActivityLevels" resultType = "activityLevelResponse">
     	select level, value, description
     	from activity_levels
     </select>
