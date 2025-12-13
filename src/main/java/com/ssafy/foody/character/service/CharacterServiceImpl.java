@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CharacterServiceImpl implements CharacterService {
 
 	private final CharacterMapper characterMapper;
+	
 	@Override
 	@Transactional(readOnly = true)
 	public List<CharacterResponse> findAllCharacters() {
