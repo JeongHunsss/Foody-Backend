@@ -8,11 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.foody.auth.jwt.JwtTokenProvider;
 import com.ssafy.foody.email.service.EmailService;
-import com.ssafy.foody.user.component.StdInfoCalculator;
 import com.ssafy.foody.user.domain.StdInfo;
 import com.ssafy.foody.user.domain.User;
 import com.ssafy.foody.user.dto.LoginResponse;
 import com.ssafy.foody.user.dto.SignupRequest;
+import com.ssafy.foody.user.helper.StdInfoCalculator;
 import com.ssafy.foody.user.mapper.UserMapper;
 
 import lombok.RequiredArgsConstructor;

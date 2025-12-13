@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.foody.auth.helper.AuthHelper;
 import com.ssafy.foody.food.domain.Food;
 import com.ssafy.foody.food.domain.UserFood;
 import com.ssafy.foody.food.mapper.FoodMapper;
@@ -33,6 +34,7 @@ public class ReportServiceImpl implements ReportService {
 	private final FoodMapper foodMapper;
 	private final ReportMapper reportMapper;
 	private final AiReportService aiReportService; // 순환 참조 주의
+	private final AuthHelper authHelper;
 	
 	// 한 페이지당 보여줄 개수 정의
 	private static final int LIST_LIMIT = 10;
@@ -309,10 +311,13 @@ public class ReportServiceImpl implements ReportService {
         if (report == null) {
             throw new IllegalArgumentException("해당 레포트를 찾을 수 없습니다.");
         }
+        
+        // 현재 접속자가 '관리자(ROLE_ADMIN)'인지 확인
+        boolean isAdmin = authHelper.isAdmin();
 
-        // 내 리포트가 맞는지 확인 (IDOR 방지)
+        // 내 레포트 또는 관리자인 지 확인 (IDOR 방지)
         // IDOR (Insecure Direct Object References, 부적절한 인가)
-        if (!report.getUserId().equals(userId)) {
+        if (!report.getUserId().equals(userId) && !isAdmin) {
             throw new IllegalArgumentException("해당 레포트에 대한 접근 권한이 없습니다.");
         }
 

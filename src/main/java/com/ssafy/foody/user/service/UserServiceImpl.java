@@ -3,11 +3,11 @@ package com.ssafy.foody.user.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ssafy.foody.user.component.StdInfoCalculator;
 import com.ssafy.foody.user.domain.StdInfo;
 import com.ssafy.foody.user.domain.User;
 import com.ssafy.foody.user.dto.UserResponse;
 import com.ssafy.foody.user.dto.UserUpdateRequest;
+import com.ssafy.foody.user.helper.StdInfoCalculator;
 import com.ssafy.foody.user.mapper.UserMapper;
 
 import lombok.RequiredArgsConstructor;
