@@ -5,7 +5,7 @@ import java.util.List;
 import com.ssafy.foody.admin.dto.ActivityLevelResponse;
 import com.ssafy.foody.admin.dto.WaitingReportResponse;
 import com.ssafy.foody.admin.dto.UpdateActivityLevelRequest;
-import com.ssafy.foody.admin.dto.UpdateWatingReportRequest;
+import com.ssafy.foody.admin.dto.UpdateWaitingReportRequest;
 import com.ssafy.foody.food.dto.FoodRequest;
 
 public interface AdminService {
@@ -27,6 +27,6 @@ public interface AdminService {
 	//레포트 생성 대기자 전체 조회
 	List<WaitingReportResponse> findAllWaitingReport(int page);
 	
-	//대기 레포트 수정
-	void updateWatingReport(UpdateWatingReportRequest updateReportRequest);
+	//분석 요청 레포트 수정
+	void updateWaitingReport(UpdateWaitingReportRequest updateReportRequest);
 }	

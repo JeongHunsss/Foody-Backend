@@ -216,7 +216,7 @@
     	LIMIT #{limit} OFFSET #{offset}
     </select>
     
-    <update id = "updateWatingReport">
+    <update id = "updateWaitingReport">
     	UPDATE reports
     	SET
     	score = #{score},
@@ -225,7 +225,7 @@
     	WHERE id = #{id}
     </update>
     
-    <update id = "toggleWatingStatus">
+    <update id = "toggleFalseWaitingStatus">
     	UPDATE reports
     	SET
     	is_waited = false

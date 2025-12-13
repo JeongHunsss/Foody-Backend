@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.foody.admin.dto.ActivityLevelResponse;
 import com.ssafy.foody.admin.dto.WaitingReportResponse;
 import com.ssafy.foody.admin.dto.UpdateActivityLevelRequest;
-import com.ssafy.foody.admin.dto.UpdateWatingReportRequest;
+import com.ssafy.foody.admin.dto.UpdateWaitingReportRequest;
 import com.ssafy.foody.food.domain.Food;
 import com.ssafy.foody.food.dto.FoodRequest;
 import com.ssafy.foody.food.mapper.FoodMapper;
@@ -131,19 +131,19 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	@Transactional
-	public void updateWatingReport(UpdateWatingReportRequest updateReportRequest) {
+	public void updateWaitingReport(UpdateWaitingReportRequest updateReportRequest) {
 		//유효성 검사
 		if(updateReportRequest == null) {
 			throw new IllegalArgumentException("수정할 레포트 내역이 없습니다");
 		}
 		
-		int updated = reportMapper.updateWatingReport(updateReportRequest);
+		int updated = reportMapper.updateWaitingReport(updateReportRequest);
 		
 		if(updated == 0 ) {
 			throw new IllegalArgumentException("수정할 레포트가 존재하지 않거나 변경할 수 없습니다.");
 		}
 		
-		reportMapper.toggleWatingStatus(updateReportRequest.getId());
+		reportMapper.toggleFalseWaitingStatus(updateReportRequest.getId());
 		
 		
 	}

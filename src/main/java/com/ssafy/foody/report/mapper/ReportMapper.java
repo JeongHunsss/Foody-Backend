@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.ssafy.foody.admin.dto.UpdateWatingReportRequest;
+import com.ssafy.foody.admin.dto.UpdateWaitingReportRequest;
 import com.ssafy.foody.admin.dto.WaitingReportResponse;
 import com.ssafy.foody.report.domain.Meal;
 import com.ssafy.foody.report.domain.MealFood;
@@ -52,8 +52,8 @@ public interface ReportMapper {
     List<WaitingReportResponse> findAllWaitingReport(@Param("offset") int offset, @Param("limit") int limit);
     
     //대기중인 레포트 작성(관리자(admin) 권한))
-    int updateWatingReport(UpdateWatingReportRequest updateReportRequest);
+    int updateWaitingReport(UpdateWaitingReportRequest updateReportRequest);
     
     //수정한 레포트 대기상태 변경 (is_waited = false)
-    void toggleWatingStatus(int id);
+    void toggleFalseWaitingStatus(int id);
 }
