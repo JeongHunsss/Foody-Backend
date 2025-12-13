@@ -59,9 +59,9 @@ public class AdminServiceImpl implements AdminService {
 			throw new IllegalArgumentException("등록할 음식 정보가 없습니다.");
 		}
 		// 중복 검사 (이미 등록된 음식정보인지)
-		Food responseFood = foodMapper.findFoodByCode(food.getCode());
-		log.info("중복 값 확인 : {}", responseFood);
-		if (responseFood != null) {
+		Food foodResponse = foodMapper.findFoodByCode(food.getCode());
+		log.debug("중복 값 확인 : {}", foodResponse);
+		if (foodResponse != null) {
 			throw new IllegalArgumentException("이미 등록된 음식 코드입니다");
 		}
 		
