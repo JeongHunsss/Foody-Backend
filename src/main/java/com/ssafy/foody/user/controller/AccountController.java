@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.foody.user.dto.FindAccountRequest;
 import com.ssafy.foody.user.dto.LoginRequest;
 import com.ssafy.foody.user.dto.LoginResponse;
 import com.ssafy.foody.user.dto.SignupRequest;
@@ -60,6 +61,35 @@ public class AccountController {
     public ResponseEntity<Boolean> checkId(@RequestParam String id) {
     	boolean exists = accountService.isIdDuplicate(id);
     	return ResponseEntity.ok(exists); 
+    }
+    
+    // 아이디 찾기 - 인증번호 발송 요청
+    @PostMapping("/find-id/send")
+    public ResponseEntity<String> sendCodeForId(@RequestBody @Valid FindAccountRequest.FindIdSend request) {
+        // 이름 없이 이메일만 보냄
+        accountService.sendCodeForFindId(request.getEmail());
+        return ResponseEntity.ok("인증번호가 이메일로 발송되었습니다.");
+    }
+
+    // 아이디 찾기 - 인증번호 검증 및 아이디 반환
+    @PostMapping("/find-id/verify")
+    public ResponseEntity<String> findIdVerify(@RequestBody @Valid FindAccountRequest.FindIdVerify request) {
+        String userId = accountService.verifyAndGetId(request.getEmail(), request.getCode());
+        return ResponseEntity.ok(userId); // "testUser123" 반환
+    }
+
+    // [비밀번호 찾기] 인증번호 발송 요청
+    @PostMapping("/find-pw/send")
+    public ResponseEntity<String> sendCodeForPw(@RequestBody @Valid FindAccountRequest.FindPwSend request) {
+        accountService.sendCodeForFindPw(request.getId(), request.getEmail());
+        return ResponseEntity.ok("인증번호가 이메일로 발송되었습니다.");
+    }
+
+    // [비밀번호 찾기] 인증번호 검증 및 임시 비밀번호 발급
+    @PostMapping("/find-pw/verify")
+    public ResponseEntity<String> findPwVerify(@RequestBody @Valid FindAccountRequest.FindPwVerify request) {
+        accountService.resetPassword(request.getId(), request.getEmail(), request.getCode());
+        return ResponseEntity.ok("인증에 성공하여 이메일로 임시 비밀번호가 발송되었습니다.");
     }
     
 }

@@ -1,9 +1,11 @@
 package com.ssafy.foody.email.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.foody.email.dto.EmailRequest;
@@ -45,5 +47,13 @@ public class EmailController {
         } else {
             return ResponseEntity.status(400).body("인증 코드가 올바르지 않거나 만료되었습니다.");
         }
+    }
+    
+    // 이메일 중복 체크
+    // GET /email/check-email?email=test@naver.com
+    @GetMapping("/check-email")
+    public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
+        boolean exists = emailService.isEmailDuplicate(email);
+        return ResponseEntity.ok(exists); // true면 중복, false면 사용 가능
     }
 }
