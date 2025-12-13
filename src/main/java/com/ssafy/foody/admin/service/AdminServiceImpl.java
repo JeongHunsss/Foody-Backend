@@ -78,34 +78,43 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	@Transactional
 	public void deleteFood(String code) {
-		// 유효성 검사, 유효성 검사
+		//유효성 검사
+		if(code == null) {
+			throw new IllegalArgumentException("입력한 음식값이 존재하지 않습니다");
+		}
 		Food foodResponse = foodMapper.findFoodByCode(code);
+		
 		log.debug("삭제하려는 음식 정보 : {}", foodResponse);
-		if(code == null || foodResponse == null) {
+		// 유효성 검사
+		if(foodResponse == null) {
 			throw new IllegalArgumentException("삭제하려는 음식 정보가 존재하지 않습니다");
 		}
 		
 		//음식 삭제
-		foodMapper.deleteFood(code);
+		foodMapper.deleteFoodByCode(code);
 	}
 
 	@Override
 	@Transactional
-	public void updateAcitivityLevel(UpdateActivityLevelRequest activity) {
+	public void updateActivityLevelByLevel(UpdateActivityLevelRequest request) {
 		//유효성 검사
-		if(activity == null) {
+		if(request == null) {
 			throw new IllegalArgumentException("수정할 활동 내용이 없습니다.");
 		}
 		
 		//활동 권한 수정
-		userMapper.updateActivityLevel(activity);
+		int updated = userMapper.updateActivityLevelByLevel(request);
+		
+		if(updated == 0) {
+			throw new IllegalArgumentException("해당 활동 정보가 존재지 않거나 변경할  수 없습니다.");
+		}
 		
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	public List<ActivityLevelResponse> getActivityLevelList() {
-		return userMapper.selectActivityLevel();
+	public List<ActivityLevelResponse> findAllActivityLevels() {
+		return userMapper.findAllActivityLevels();
 	}
 
 }
