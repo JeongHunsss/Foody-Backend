@@ -50,6 +50,8 @@
 			<if test="activityLevel != null">activity_level = #{activityLevel},</if>
 			<if test="isDiabetes != null">is_diabetes = #{isDiabetes},</if>
 			<if test="role != null">role = #{role},</if>
+			<if test="provider != null">provider = #{provider},</if>
+			<if test="providerId != null">provider_id = #{providerId},</if>
 		</set>
 		WHERE id = #{id}
 	</update>
@@ -222,6 +224,13 @@
     <select id="findIdByEmail" resultType="String">
         SELECT id FROM users WHERE email = #{email}
     </select> 
+    
+    <select id="findUserByEmail" resultType="User">
+    	SELECT id, password, name, age, email, height, weight, gender, activity_level, is_diabetes,
+    	role, provider, provider_id, created_at
+    	FROM users 
+    	WHERE email = #{email}
+	</select>
 
     <select id="countByIdAndEmail" resultType="int">
         SELECT COUNT(*) FROM users WHERE id = #{id} AND email = #{email}

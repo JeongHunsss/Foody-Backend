@@ -57,6 +57,9 @@ public interface UserMapper {
     
     // 이메일로 아이디 조회
     String findIdByEmail(String email);
+    
+    // 이메일로 유저 정보 조회
+    User findUserByEmail(String email);
 
     // 비밀번호 찾기용: 아이디 + 이메일 일치 확인
     int countByIdAndEmail(@Param("id") String id, @Param("email") String email);

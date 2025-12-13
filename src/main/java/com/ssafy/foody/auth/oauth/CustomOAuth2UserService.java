@@ -71,32 +71,48 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 	}
 
 	private User saveOrUpdate(String provider, String providerId, String email, String name) {
-		// DB에서 provider_id로 유저 조회
+		// provider_id로 유저 조회
 		User user = userMapper.findByProviderId(providerId);
+		
+		if (user != null) {
+            log.info("소셜 로그인 성공 (기존 연동 계정): {}", user.getId());
+            return user;
+        }
+		
+		// 연동된 계정이 없다면, 이메일로 기존 가입자가 있는지 확인 (계정 통합 시도)
+        user = userMapper.findUserByEmail(email);
+        
+        // [계정 통합]
+        if (user != null) {
+            // 일반 가입된 계정에 소셜 정보 추가
+            log.info("소셜 계정 연동 진행: {}", email);
+            
+            // 기존 정보에 소셜 정보 업데이트
+            user.setProvider(provider);
+            user.setProviderId(providerId);
+            userMapper.updateUser(user); 
+            
+            return user;
+        }
+        
+        // [신규 가입]
+        String uuid = UUID.randomUUID().toString().substring(0, 8);
+        String generatedId = provider + "_" + uuid;
 
-		// [신규 가입]
-		if (user == null) {
-			// ID 생성
-			String uuid = UUID.randomUUID().toString().substring(0, 8);
-			String generatedId = provider + "_" + uuid;
+        user = User.builder()
+                .id(generatedId)
+                .name(name != null ? name : "이름 미설정") // 닉네임
+                .email(email)
+                .isDiabetes(false) // 소셜 가입 시 기본값 false로 설정
+                .role("ROLE_GUEST") // GUEST는 추후에 추가 정보 입력 필요
+                .provider(provider)
+                .providerId(providerId)
+                .build();
 
-			user = User.builder()
-					.id(generatedId)
-					.name(name != null ? name : "이름 미설정") // 닉네임
-					.email(email)
-					.isDiabetes(false) // 소셜 가입 시 기본값 false로 설정
-					.role("ROLE_GUEST") // GUEST는 추후에 추가 정보 입력
-					.provider(provider)
-					.providerId(providerId)
-					.build();
+        userMapper.save(user);
+        log.info("소셜 신규 회원 가입 완료 (GUEST): {}", generatedId);
 
-			userMapper.save(user);
-			log.info("소셜 회원가입 완료 (GUEST): {}", generatedId);
-		} else {
-			// [기존 회원] 로그 출력 정도만          
-			log.info("소셜 로그인 성공: {}", user.getId());
-		}
-
-		return user;
+        return user;
+        
 	}
 }
