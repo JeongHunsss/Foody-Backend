@@ -1,5 +1,8 @@
 package com.ssafy.foody.admin.conroller;
 
+
+import java.util.List;
+
 import org.apache.ibatis.annotations.Delete;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.foody.admin.dto.ActivityLevelResponse;
+import com.ssafy.foody.admin.dto.UpdateActivityLevelRequest;
 import com.ssafy.foody.admin.dto.UpdateRoleRequest;
 import com.ssafy.foody.admin.service.AdminService;
 import com.ssafy.foody.food.dto.FoodRequest;
@@ -57,6 +62,7 @@ public class AdminController {
 		adminService.addFood(request);
 		return ResponseEntity.ok("음식이 성공적으로 등록되었습니다");
 	}
+	
 	/**
 	 * 음식 삭제
 	 * DELETE /admin/{code}
@@ -67,4 +73,34 @@ public class AdminController {
 		adminService.deleteFood(code);
 		return ResponseEntity.ok("음식이 성공적으로 삭제되었습니다");
 	}
+	
+	/**
+	 * Activity_level 테이블 value(가중치) description(설명) 수정
+	 * POST /admin/activitylv
+	 * 요청 Body(raw)
+	 * level, value, description
+	 */
+	@PreAuthorize("hasRole('ADMIN')")
+	@PatchMapping("activitylevel")
+	public ResponseEntity<String> updateActivityLevel(@Valid @RequestBody UpdateActivityLevelRequest request) {
+		adminService.updateAcitivityLevel(request);
+		return ResponseEntity.ok("Activity level이 성공적으로 수정되었습니다");
+	}
+	
+	/**
+	 * Activity level 테이블 조회
+	 * GET /admin/activitylevel
+	 */
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("activitylevel")
+	public ResponseEntity<List<ActivityLevelResponse>> activityLevelList() {
+		List<ActivityLevelResponse> list = adminService.getActivityLevelList();
+		log.debug("조호된 활동 레벨 : {}", list);
+		//데이터가 없으면 204 반환
+		if(list == null || list.isEmpty()) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.ok(list);
+	}
+	
 }

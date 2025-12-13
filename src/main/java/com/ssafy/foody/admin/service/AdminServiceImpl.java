@@ -1,10 +1,14 @@
 package com.ssafy.foody.admin.service;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ssafy.foody.admin.dto.ActivityLevelResponse;
+import com.ssafy.foody.admin.dto.UpdateActivityLevelRequest;
 import com.ssafy.foody.food.domain.Food;
 import com.ssafy.foody.food.dto.FoodRequest;
-import com.ssafy.foody.food.dto.FoodResponse;
 import com.ssafy.foody.food.mapper.FoodMapper;
 import com.ssafy.foody.user.mapper.UserMapper;
 
@@ -18,6 +22,8 @@ public class AdminServiceImpl implements AdminService {
 	private final UserMapper userMapper;
 	private final FoodMapper foodMapper;
 	
+	@Override
+	@Transactional
 	public void updateUserRole(String userId, String role) {
 		
 		String normalizedRole = normalize(role);
@@ -50,8 +56,9 @@ public class AdminServiceImpl implements AdminService {
 
         return role;
 	}
-
 	
+	@Override
+	@Transactional
 	public void addFood(FoodRequest food) {
 		// 유효성 검사
 		if (food == null) {
@@ -68,6 +75,8 @@ public class AdminServiceImpl implements AdminService {
 		foodMapper.addFood(food);
 	}
 
+	@Override
+	@Transactional
 	public void deleteFood(String code) {
 		// 유효성 검사, 유효성 검사
 		Food foodResponse = foodMapper.findFoodByCode(code);
@@ -76,8 +85,27 @@ public class AdminServiceImpl implements AdminService {
 			throw new IllegalArgumentException("삭제하려는 음식 정보가 존재하지 않습니다");
 		}
 		
-		//음식 사제
+		//음식 삭제
 		foodMapper.deleteFood(code);
+	}
+
+	@Override
+	@Transactional
+	public void updateAcitivityLevel(UpdateActivityLevelRequest activity) {
+		//유효성 검사
+		if(activity == null) {
+			throw new IllegalArgumentException("수정할 활동 내용이 없습니다.");
+		}
+		
+		//활동 권한 수정
+		userMapper.updateActivityLevel(activity);
+		
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<ActivityLevelResponse> getActivityLevelList() {
+		return userMapper.selectActivityLevel();
 	}
 
 }
