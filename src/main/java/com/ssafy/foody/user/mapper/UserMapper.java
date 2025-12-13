@@ -54,4 +54,13 @@ public interface UserMapper {
     
     // 활동 레벨 전체 조회 (관리자(ADMIN 전용))
     List<ActivityLevelResponse> findAllActivityLevels();
+    
+    // 이메일로 아이디 조회
+    String findIdByEmail(String email);
+
+    // 비밀번호 찾기용: 아이디 + 이메일 일치 확인
+    int countByIdAndEmail(@Param("id") String id, @Param("email") String email);
+
+    // 비밀번호 변경
+    void updatePassword(@Param("id") String id, @Param("password") String password);
 }

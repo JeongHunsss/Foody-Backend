@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ssafy.foody.user.mapper.UserMapper;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -24,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class EmailServiceImpl implements EmailService {
 
 	private final JavaMailSender javaMailSender;
+	private final UserMapper userMapper;
 	
 	@Value("${spring.mail.username}")
     private String senderEmail;
@@ -58,8 +62,8 @@ public class EmailServiceImpl implements EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, false, "UTF-8");
             
             helper.setTo(email);
-            helper.setSubject("[Foody] 회원가입 인증 코드입니다.");
-            helper.setText("인증 코드: <strong>" + code + "</strong><br>5분 안에 입력해주세요.", true);
+            helper.setSubject("[Foody] 인증 코드입니다.");
+            helper.setText("인증 코드: <strong>" + code + "</strong><br><strong>5분</strong> 안에 입력해주세요.", true);
             
             // 보내는 사람 설정 (이메일 주소, "표시될 이름")
             helper.setFrom(senderEmail, "Foody");
@@ -109,6 +113,41 @@ public class EmailServiceImpl implements EmailService {
             key.append(random.nextInt(10));
         }
         return key.toString();
+    }
+    
+    // 임시 비밀번호 발송
+    @Override
+    public void sendTemporaryPassword(String email, String tempPassword) {
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, false, "UTF-8");
+
+            helper.setTo(email);
+            helper.setFrom(senderEmail, "Foody"); 
+            helper.setSubject("[Foody] 임시 비밀번호 안내");
+            
+            String htmlContent = "회원님의 임시 비밀번호는 "
+            				+ "<strong>" + tempPassword + "</strong> 입니다."
+            				+ "<br><strong>로그인 후 반드시 변경해주세요.</strong>";
+            
+            helper.setText(htmlContent, true);
+
+            javaMailSender.send(message);
+            log.debug("임시 비밀번호 발송 성공: {}", email);
+
+        } catch (Exception e) {
+            log.error("임시 비밀번호 발송 실패", e);
+            throw new RuntimeException("메일 발송 중 오류가 발생했습니다.");
+        }
+    }
+    
+    // 이메일 중복 체크
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isEmailDuplicate(String email) {
+        // 아이디가 조회되면(null이 아니면) 이미 가입된 이메일임 -> true 반환
+        String userId = userMapper.findIdByEmail(email);
+        return userId != null;
     }
 
 }
