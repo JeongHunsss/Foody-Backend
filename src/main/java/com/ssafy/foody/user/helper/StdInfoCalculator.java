@@ -1,4 +1,4 @@
-package com.ssafy.foody.user.component;
+package com.ssafy.foody.user.helper;
 
 import org.springframework.stereotype.Component;
 
