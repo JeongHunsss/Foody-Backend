@@ -8,4 +8,7 @@ public interface AdminService {
 	
 	//Foods테이블 새로운 값 삽입
 	void addFood(FoodRequest food);
+	
+	//Foods 테이블에 있는 값 삭제하기
+	void deleteFood(String code);
 }

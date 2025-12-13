@@ -51,10 +51,9 @@ public class AdminServiceImpl implements AdminService {
         return role;
 	}
 
-	@Override
 	
 	public void addFood(FoodRequest food) {
-		// 유호성 검사
+		// 유효성 검사
 		if (food == null) {
 			throw new IllegalArgumentException("등록할 음식 정보가 없습니다.");
 		}
@@ -67,6 +66,18 @@ public class AdminServiceImpl implements AdminService {
 		
 		//음식 등록
 		foodMapper.addFood(food);
+	}
+
+	public void deleteFood(String code) {
+		// 유효성 검사, 유효성 검사
+		Food foodResponse = foodMapper.findFoodByCode(code);
+		log.debug("삭제하려는 음식 정보 : {}", foodResponse);
+		if(code == null || foodResponse == null) {
+			throw new IllegalArgumentException("삭제하려는 음식 정보가 존재하지 않습니다");
+		}
+		
+		//음식 사제
+		foodMapper.deleteFood(code);
 	}
 
 }

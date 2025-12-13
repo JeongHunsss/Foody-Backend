@@ -113,5 +113,9 @@
     	, #{carb}, #{protein}, #{fat}, #{sugar}, #{natrium})
     </insert>
     
+    <delete id="deleteFood">
+    	DELETE FROM foods
+    	WHERE code = #{code}
+    </delete>
 
 </mapper>
