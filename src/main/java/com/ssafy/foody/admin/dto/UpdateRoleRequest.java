@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UpdateRoleRequest {
-	@NotBlank(message = "userId 입력은 필수입니다")
+	@NotBlank(message = "Id 입력은 필수입니다")
 	private String userId;
 	
-	@NotBlank(message = "role 권한 입력은 필수입니다.")
+	@NotBlank(message = "권한 입력은 필수입니다.")
 	private String role;
 }
