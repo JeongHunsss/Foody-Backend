@@ -23,17 +23,17 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final StdInfoCalculator stdInfoCalculator;
 
-    // 내 정보 조회 (ID로 찾기)
+    // 내 정보 조회 (ID로 찾기) - StdInfo 포함
     @Transactional(readOnly = true)
     public UserResponse findById(String userId) {
-        User user = userMapper.findById(userId);
+        User user = userMapper.findUserWithStdInfo(userId);
         if (user == null) {
             throw new IllegalArgumentException("해당 유저를 찾을 수 없습니다.");
         }
         UserResponse userResponse = new UserResponse(user);
         return userResponse;
     }
-    
+
     @Override
     @Transactional
     public void updateUserInfo(String userId, UserUpdateRequest request) {
@@ -44,17 +44,24 @@ public class UserServiceImpl implements UserService {
         }
 
         // 유저 정보 업데이트 (값이 있는 것만)
-        if (request.getName() != null) user.setName(request.getName());
-        if (request.getAge() != null) user.setAge(request.getAge());
-        if (request.getHeight() != null) user.setHeight(request.getHeight());
-        if (request.getWeight() != null) user.setWeight(request.getWeight());
-        if (request.getGender() != null) user.setGender(request.getGender());
-        if (request.getActivityLevel() != null) user.setActivityLevel(request.getActivityLevel());
-        if (request.getIsDiabetes() != null) user.setIsDiabetes(request.getIsDiabetes());
-        
+        if (request.getName() != null)
+            user.setName(request.getName());
+        if (request.getAge() != null)
+            user.setAge(request.getAge());
+        if (request.getHeight() != null)
+            user.setHeight(request.getHeight());
+        if (request.getWeight() != null)
+            user.setWeight(request.getWeight());
+        if (request.getGender() != null)
+            user.setGender(request.getGender());
+        if (request.getActivityLevel() != null)
+            user.setActivityLevel(request.getActivityLevel());
+        if (request.getIsDiabetes() != null)
+            user.setIsDiabetes(request.getIsDiabetes());
+
         // users 테이블 업데이트
         userMapper.updateUser(user);
-        
+
         // GUEST -> USER 심사 로직
         // 현재 권한이 GUEST인지 확인
         if ("ROLE_GUEST".equals(user.getRole())) {
@@ -62,32 +69,32 @@ public class UserServiceImpl implements UserService {
 
             // 기본 정보가 모두 있는 지 검사
             if (checkBasicInfo(user)) {
-                
+
                 // 표준 정보(StdInfo)를 계산 및 DB 생성
                 StdInfo stdInfo = stdInfoCalculator.calculate(user);
                 if (stdInfo != null) {
                     userMapper.insertStdInfo(stdInfo);
                 }
-            	
+
                 // 권한을 USER로 변경
                 user.setRole("ROLE_USER");
-                
+
                 // 변경된 권한 DB에 저장
-                userMapper.updateRole(user.getId(), "ROLE_USER"); 
-                
+                userMapper.updateRole(user.getId(), "ROLE_USER");
+
                 log.info("유저 권한 수정 완료 ROLE_GUEST -> ROLE_USER - userId: {}", userId);
             } else {
                 log.info("아직 필수 정보가 부족하여 GUEST 상태 유지 - userId: {}", userId);
             }
         } else {
-	        // 표준 영양소 재계산 및 DB 업데이트
-	        StdInfo stdInfo = stdInfoCalculator.calculate(user);
-	        if (stdInfo != null) {
-	            userMapper.updateStdInfo(stdInfo);
-	        }
+            // 표준 영양소 재계산 및 DB 업데이트
+            StdInfo stdInfo = stdInfoCalculator.calculate(user);
+            if (stdInfo != null) {
+                userMapper.updateStdInfo(stdInfo);
+            }
         }
     }
-    
+
     @Override
     @Transactional
     public void deleteUser(String userId) {
@@ -97,10 +104,10 @@ public class UserServiceImpl implements UserService {
         }
 
         // 유저 삭제
-		userMapper.deleteUser(userId);
-	}
-    
- 	// 비밀번호 변경
+        userMapper.deleteUser(userId);
+    }
+
+    // 비밀번호 변경
     @Override
     @Transactional
     public void changePassword(String userId, String oldPassword, String newPassword) {
@@ -117,20 +124,19 @@ public class UserServiceImpl implements UserService {
 
         // 새 비밀번호가 기존과 같은지 체크
         if (passwordEncoder.matches(newPassword, user.getPassword())) {
-             throw new IllegalArgumentException("새로운 비밀번호는 기존 비밀번호와 달라야 합니다.");
+            throw new IllegalArgumentException("새로운 비밀번호는 기존 비밀번호와 달라야 합니다.");
         }
 
         // 비밀번호 암호화 및 DB 업데이트
         userMapper.updatePassword(userId, passwordEncoder.encode(newPassword));
     }
-    
+
     /**
      * 필수 정보(나이, 키, 몸무게, 성별, 활동량)가 모두 입력되었는지 확인
      */
     private boolean checkBasicInfo(User user) {
         // 신체 정보가 모두 있는지 확인 (0이나 null이 아니어야 함)
-        boolean hasBasicInfo = 
-                user.getAge() != null && user.getAge() > 0 &&
+        boolean hasBasicInfo = user.getAge() != null && user.getAge() > 0 &&
                 user.getHeight() != null && user.getHeight() > 0 &&
                 user.getWeight() != null && user.getWeight() > 0 &&
                 user.getGender() != null && !user.getGender().isEmpty() &&
