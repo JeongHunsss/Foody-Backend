@@ -1,5 +1,7 @@
 package com.ssafy.foody.user.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.foody.admin.dto.ActivityLevelResponse;
+import com.ssafy.foody.admin.service.AdminService;
 import com.ssafy.foody.user.dto.FindAccountRequest;
 import com.ssafy.foody.user.dto.LoginRequest;
 import com.ssafy.foody.user.dto.LoginResponse;
@@ -26,7 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 public class AccountController {
 
     private final AccountService accountService;
-    
+    private final AdminService adminService;
+
     // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody @Valid SignupRequest request) {
@@ -55,14 +60,24 @@ public class AccountController {
     public ResponseEntity<String> logout() {
         return ResponseEntity.ok("로그아웃 되었습니다.");
     }
-    
+
     // 아이디 중복 체크
     @GetMapping("/check-id")
     public ResponseEntity<Boolean> checkId(@RequestParam String id) {
-    	boolean exists = accountService.isIdDuplicate(id);
-    	return ResponseEntity.ok(exists); 
+        boolean exists = accountService.isIdDuplicate(id);
+        return ResponseEntity.ok(exists);
     }
-    
+
+    /**
+     * 활동 레벨 전체 조회 (Public - 회원가입용)
+     * 인증 없이 조회 가능
+     */
+    @GetMapping("/activitylevels")
+    public ResponseEntity<List<ActivityLevelResponse>> getActivityLevels() {
+        List<ActivityLevelResponse> list = adminService.findAllActivityLevels();
+        return ResponseEntity.ok(list);
+    }
+
     // 아이디 찾기 - 인증번호 발송 요청
     @PostMapping("/find-id/send")
     public ResponseEntity<String> sendCodeForId(@RequestBody @Valid FindAccountRequest.FindIdSend request) {
@@ -91,5 +106,5 @@ public class AccountController {
         accountService.resetPassword(request.getId(), request.getEmail(), request.getCode());
         return ResponseEntity.ok("인증에 성공하여 이메일로 임시 비밀번호가 발송되었습니다.");
     }
-    
+
 }
