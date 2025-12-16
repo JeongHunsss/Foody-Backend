@@ -1,6 +1,5 @@
 package com.ssafy.foody.admin.controller;
 
-
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -33,28 +32,28 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AdminController {
 	private final AdminService adminService;
-	
+
 	/**
 	 * 권한 수정 (관리자만 접근 가능)
 	 * PATCH /admin
-	 * 요청 Body(raw) 
+	 * 요청 Body(raw)
 	 * userID : 권한을 변경할 아이디
 	 * role : 지정하려는 권한
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping
 	public ResponseEntity<String> updateUserRole(
-			@RequestBody UpdateRoleRequest request) {
+			@Valid @RequestBody UpdateRoleRequest request) {
 		adminService.updateUserRole(request.getUserId(), request.getRole());
 		return ResponseEntity.ok("권한이 성공적으로 수정되었습니다");
-		
+
 	}
-	
+
 	/**
 	 * Foods 테이블 음식 등록 (관리자만 접근 가능)
 	 * Post /admin
 	 * 요청 Body(raw)
-	 * code, name, category, standard, kcal, carb, protein, fat, sugar, natrium 
+	 * code, name, category, standard, kcal, carb, protein, fat, sugar, natrium
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
@@ -62,7 +61,7 @@ public class AdminController {
 		adminService.addFood(request);
 		return ResponseEntity.ok("음식이 성공적으로 등록되었습니다");
 	}
-	
+
 	/**
 	 * 음식 삭제
 	 * DELETE /admin/{code}
@@ -73,7 +72,7 @@ public class AdminController {
 		adminService.deleteFood(code);
 		return ResponseEntity.ok("음식이 성공적으로 삭제되었습니다");
 	}
-	
+
 	/**
 	 * Activity_level 테이블 value(가중치) description(설명) 수정
 	 * POST /admin/activitylevel
@@ -86,7 +85,7 @@ public class AdminController {
 		adminService.updateActivityLevelByLevel(request);
 		return ResponseEntity.ok("Activity level이 성공적으로 수정되었습니다");
 	}
-	
+
 	/**
 	 * Activity level 테이블 조회
 	 * GET /admin/activitylevel
@@ -96,13 +95,13 @@ public class AdminController {
 	public ResponseEntity<List<ActivityLevelResponse>> findAllActivityLevels() {
 		List<ActivityLevelResponse> list = adminService.findAllActivityLevels();
 		log.debug("조회된 활동 레벨 : {}", list);
-		//데이터가 없으면 204 반환
-		if(list == null || list.isEmpty()) {
+		// 데이터가 없으면 204 반환
+		if (list == null || list.isEmpty()) {
 			return ResponseEntity.noContent().build();
 		}
 		return ResponseEntity.ok(list);
 	}
-	
+
 	/**
 	 * Reports 테이블에서 레포트 생성 대기자 조회
 	 * GET /admin/report?page={페이지수}
@@ -112,11 +111,11 @@ public class AdminController {
 	public ResponseEntity<List<WaitingReportResponse>> findAllWaitingReport(
 			@RequestParam(value = "page", defaultValue = "1") int page) {
 		List<WaitingReportResponse> list = adminService.findAllWaitingReport(page);
-		log.debug("레포트 대기 목록 : {}" , list);
-		//대기자가 없는 경우에는 front 에서 list size 체크해서 0일경우 대기자가 없습니다 라는 멘트 표시
+		log.debug("레포트 대기 목록 : {}", list);
+		// 대기자가 없는 경우에는 front 에서 list size 체크해서 0일경우 대기자가 없습니다 라는 멘트 표시
 		return ResponseEntity.ok(list);
 	}
-	
+
 	/**
 	 * 대기중인 Reports 작성
 	 * PATCH /admin/report
@@ -126,10 +125,9 @@ public class AdminController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("report")
 	public ResponseEntity<String> updateWaitingReport(
-			@Valid @RequestBody UpdateWaitingReportRequest updateReportRequest){
+			@Valid @RequestBody UpdateWaitingReportRequest updateReportRequest) {
 		adminService.updateWaitingReport(updateReportRequest);
 		return ResponseEntity.ok("레포트 수정이 성공적으로 완료되었습니다.");
 	}
-	
-	
+
 }
