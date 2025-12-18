@@ -115,6 +115,19 @@
         LIMIT #{limit} OFFSET #{offset}
     </select>
     
+    <select id="selectReportCount" resultType="int">
+        SELECT COUNT(*)
+        FROM reports
+        WHERE user_id = #{userId}
+        
+        <if test="startDate != null">
+            AND created_at >= #{startDate}
+        </if>
+        <if test="endDate != null">
+            AND created_at <![CDATA[ < ]]> DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+        </if>
+    </select>
+    
     <select id="selectReportDetail" resultMap="reportDetailMap">
         SELECT 
             r.id AS report_id, r.user_id, r.score, r.comment, r.is_waited, r.character_id, r.created_at,

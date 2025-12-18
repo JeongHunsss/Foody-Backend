@@ -1,8 +1,8 @@
 package com.ssafy.foody.report.service;
 
 import java.time.LocalDate;
-import java.util.List;
 
+import com.ssafy.foody.common.dto.PageResponse;
 import com.ssafy.foody.report.dto.ReportRequest;
 import com.ssafy.foody.report.dto.ReportListResponse;
 import com.ssafy.foody.report.dto.ReportResponse;
@@ -13,7 +13,7 @@ public interface ReportService {
     void createReport(String userId, ReportRequest request);
 
     // 레포트 목록 조회
-    List<ReportListResponse> getReportList(String userId, int page, LocalDate startDate, LocalDate endDate);
+    PageResponse<ReportListResponse> getReportList(String userId, int page, LocalDate startDate, LocalDate endDate);
 
     // 상세 조회
     ReportResponse getReportDetail(String userId, int reportId);

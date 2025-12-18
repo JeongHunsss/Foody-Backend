@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.foody.common.dto.PageResponse;
 import com.ssafy.foody.report.dto.ReportRequest;
 import com.ssafy.foody.report.dto.ReportListResponse;
 import com.ssafy.foody.report.dto.ReportResponse;
@@ -54,14 +55,14 @@ public class ReportController {
      * page는 생략 가능 (1이 기본)
      */
     @GetMapping
-    public ResponseEntity<List<ReportListResponse>> getReportList(
+    public ResponseEntity<PageResponse<ReportListResponse>> getReportList(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(required = false) LocalDate startDate,
             @RequestParam(required = false) LocalDate endDate) {
         String userId = userDetails.getUsername();
 
-        List<ReportListResponse> reports = reportService.getReportList(userId, page, startDate, endDate);
+        PageResponse<ReportListResponse> reports = reportService.getReportList(userId, page, startDate, endDate);
 
         return ResponseEntity.ok(reports);
     }

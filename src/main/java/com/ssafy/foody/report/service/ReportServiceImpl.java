@@ -15,6 +15,7 @@ import com.ssafy.foody.food.domain.UserFood;
 import com.ssafy.foody.food.mapper.FoodMapper;
 import com.ssafy.foody.report.domain.Meal;
 import com.ssafy.foody.report.domain.MealFood;
+import com.ssafy.foody.common.dto.PageResponse;
 import com.ssafy.foody.report.domain.Report;
 import com.ssafy.foody.report.dto.AiReportRequest;
 import com.ssafy.foody.report.dto.AiReportResponse;
@@ -311,16 +312,31 @@ public class ReportServiceImpl implements ReportService {
 
 	@Override
 	@Transactional(readOnly = true) // 조회 전용
-	public List<ReportListResponse> getReportList(String userId, int page, LocalDate startDate, LocalDate endDate) {
+	public PageResponse<ReportListResponse> getReportList(String userId, int page, LocalDate startDate,
+			LocalDate endDate) {
 		int offset = (page - 1) * LIST_LIMIT;
 
+		// 데이터 조회
 		List<Report> reports = reportMapper.selectReportList(userId, offset, LIST_LIMIT, startDate, endDate);
+
+		// 전체 개수 조회
+		int totalElements = reportMapper.selectReportCount(userId, startDate, endDate);
+
+		// 전체 페이지 수 계산
+		int totalPages = (int) Math.ceil((double) totalElements / LIST_LIMIT);
 
 		List<ReportListResponse> responseList = new ArrayList<>();
 		for (Report report : reports) {
 			responseList.add(convertToReportListResponse(report));
 		}
-		return responseList;
+
+		return PageResponse.<ReportListResponse>builder()
+				.content(responseList)
+				.page(page)
+				.size(LIST_LIMIT)
+				.totalElements(totalElements)
+				.totalPages(totalPages)
+				.build();
 	}
 
 	@Override

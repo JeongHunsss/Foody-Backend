@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.foody.common.dto.PageResponse;
 import com.ssafy.foody.food.domain.Favorite;
 import com.ssafy.foody.food.dto.FavoriteResponse;
-import com.ssafy.foody.food.dto.FoodListResponse;
 import com.ssafy.foody.food.dto.FoodResponse;
 import com.ssafy.foody.food.mapper.FoodMapper;
 
@@ -26,7 +26,7 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     @Transactional(readOnly = true)
-    public FoodListResponse getFoodList(int page, String keyword, String category) {
+    public PageResponse<FoodResponse> getFoodList(int page, String keyword, String category) {
 
         int offset = (page - 1) * LIST_LIMIT;
 
@@ -48,7 +48,13 @@ public class FoodServiceImpl implements FoodService {
         // 전체 페이지 수 계산
         int totalPages = (int) Math.ceil((double) totalCount / LIST_LIMIT);
 
-        return new FoodListResponse(list, totalCount, page, totalPages);
+        return PageResponse.<FoodResponse>builder()
+                .content(list)
+                .page(page)
+                .size(LIST_LIMIT)
+                .totalElements(totalCount)
+                .totalPages(totalPages)
+                .build();
     }
 
     @Override
