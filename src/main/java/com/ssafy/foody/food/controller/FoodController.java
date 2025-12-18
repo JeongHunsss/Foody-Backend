@@ -15,10 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ssafy.foody.common.dto.PageResponse;
 import com.ssafy.foody.food.dto.AiFoodResponse;
 import com.ssafy.foody.food.dto.FavoriteRequest;
 import com.ssafy.foody.food.dto.FavoriteResponse;
-import com.ssafy.foody.food.dto.FoodListResponse;
+import com.ssafy.foody.food.dto.FoodResponse;
 import com.ssafy.foody.food.service.AiFoodService;
 import com.ssafy.foody.food.service.FoodService;
 
@@ -37,7 +38,7 @@ public class FoodController {
     private final AiFoodService aiFoodService;
 
     @GetMapping("/")
-    public ResponseEntity<FoodListResponse> getFoodList(
+    public ResponseEntity<PageResponse<FoodResponse>> getFoodList(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "keyword", required = false) String keyword, // 검색어가 없어도 동작하도록 설정
             @RequestParam(value = "category", required = false) String category // 카테고리
@@ -45,7 +46,7 @@ public class FoodController {
         log.debug("조회된 음식 : {}", keyword);
         log.debug("조호된 페이지 : {}", page);
         // Service에 페이지 번호와 검색어(있다면)를 넘김
-        FoodListResponse response = foodService.getFoodList(page, keyword, category);
+        PageResponse<FoodResponse> response = foodService.getFoodList(page, keyword, category);
 
         // 데이터가 없으면 204
         if (response.getContent() == null || response.getContent().isEmpty()) {
