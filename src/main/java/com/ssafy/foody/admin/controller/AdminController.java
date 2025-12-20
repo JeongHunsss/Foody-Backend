@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -93,7 +95,7 @@ public class AdminController {
 	 * level, value, description
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
-	@PatchMapping("activitylevel")
+	@PatchMapping("/activitylevel")
 	public ResponseEntity<String> updateActivityLevel(@Valid @RequestBody UpdateActivityLevelRequest request) {
 		adminService.updateActivityLevelByLevel(request);
 		return ResponseEntity.ok("Activity level이 성공적으로 수정되었습니다");
@@ -104,7 +106,7 @@ public class AdminController {
 	 * GET /admin/activitylevel
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("activitylevel")
+	@GetMapping("/activitylevel")
 	public ResponseEntity<List<ActivityLevelResponse>> findAllActivityLevels() {
 		List<ActivityLevelResponse> list = adminService.findAllActivityLevels();
 		log.debug("조회된 활동 레벨 : {}", list);
@@ -120,12 +122,11 @@ public class AdminController {
 	 * GET /admin/report?page={페이지수}
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("report")
+	@GetMapping("/report")
 	public ResponseEntity<List<WaitingReportResponse>> findAllWaitingReport(
 			@RequestParam(value = "page", defaultValue = "1") int page) {
 		List<WaitingReportResponse> list = adminService.findAllWaitingReport(page);
 		log.debug("레포트 대기 목록 : {}", list);
-		// 대기자가 없는 경우에는 front 에서 list size 체크해서 0일경우 대기자가 없습니다 라는 멘트 표시
 		return ResponseEntity.ok(list);
 	}
 
@@ -136,9 +137,12 @@ public class AdminController {
 	 * id, score, character_id, comment
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
-	@PatchMapping("report")
+	@PatchMapping("/report")
 	public ResponseEntity<String> updateWaitingReport(
+			@AuthenticationPrincipal UserDetails userDetails,
 			@Valid @RequestBody UpdateWaitingReportRequest updateReportRequest) {
+		log.debug("분석 작성 전문가 id: {}", userDetails.getUsername());
+		updateReportRequest.setExpertId(userDetails.getUsername());
 		adminService.updateWaitingReport(updateReportRequest);
 		return ResponseEntity.ok("레포트 수정이 성공적으로 완료되었습니다.");
 	}

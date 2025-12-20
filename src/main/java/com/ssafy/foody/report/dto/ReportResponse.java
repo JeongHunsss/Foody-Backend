@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 public class ReportResponse {
     private int id;
     private String userId;
+    private String expertId;
+    private String expertName;
 
     // 분석 정보
     private Double score;

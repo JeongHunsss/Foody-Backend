@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.foody.chat.mapper.ChatMapper">
+
+    <resultMap id="ChatRoomMap" type="ChatRoom">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="expertId" column="expert_id"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <resultMap id="ChatMessageMap" type="ChatMessage">
+        <id property="id" column="id"/>
+        <result property="roomId" column="room_id"/>
+        <result property="senderId" column="sender_id"/>
+        <result property="message" column="message"/>
+        <result property="sentAt" column="sent_at"/>
+    </resultMap>
+
+    <insert id="createChatRoom" parameterType="ChatRoom">
+        INSERT INTO chat_rooms (id, report_id, user_id, expert_id, created_at)
+        VALUES (#{id}, #{reportId}, #{userId}, #{expertId}, NOW())
+    </insert>
+
+    <select id="findChatRoomByReportId" resultMap="ChatRoomMap">
+        SELECT id, report_id, user_id, expert_id, created_at
+        FROM chat_rooms
+        WHERE report_id = #{reportId}
+    </select>
+    
+    <select id="findChatRoomById" resultMap="ChatRoomMap">
+        SELECT id, user_id, expert_id, created_at
+        FROM chat_rooms
+        WHERE id = #{roomId}
+    </select>
+
+    <insert id="saveMessage" parameterType="ChatMessage" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO chat_messages (room_id, sender_id, message, sent_at)
+        VALUES (#{roomId}, #{senderId}, #{message}, #{sentAt})
+    </insert>
+
+    <select id="findMessagesByRoomId" resultMap="ChatMessageMap">
+        SELECT id, room_id, sender_id, message, sent_at
+        FROM chat_messages
+        WHERE room_id = #{roomId}
+        ORDER BY sent_at ASC
+    </select>
+
+    <select id="findChatRoomsByExpertId" resultType="com.ssafy.foody.chat.dto.ChatRoomResponse">
+        SELECT 
+            r.id, 
+            r.report_id AS reportId,
+            r.user_id AS userId, 
+            u.name AS userName, 
+            r.created_at AS createdAt
+        FROM chat_rooms r
+        JOIN users u ON r.user_id = u.id
+        JOIN reports rp ON r.report_id = rp.id
+        WHERE rp.expert_id = #{expertId}
+        ORDER BY r.created_at DESC
+    </select>
+
+</mapper>

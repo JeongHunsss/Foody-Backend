@@ -11,6 +11,8 @@
         <result property="comment" column="comment"/>
         <result property="isWaited" column="is_waited"/>
         <result property="characterId" column="character_id"/>
+        <result property="expertId" column="expert_id"/>
+        <result property="expertName" column="expert_name"/>
         <result property="createdAt" column="created_at"/>
         
         <result property="userAge" column="user_age" />
@@ -131,7 +133,7 @@
     
     <select id="selectReportDetail" resultMap="reportDetailMap">
         SELECT 
-            r.id AS report_id, r.user_id, r.score, r.comment, r.is_waited, r.character_id, r.created_at,
+            r.id AS report_id, r.user_id, r.expert_id, e.name AS expert_name, r.score, r.comment, r.is_waited, r.character_id, r.created_at,
             r.user_age, r.user_height, r.user_weight, r.user_gender, r.user_activity_level,
             u.is_diabetes AS user_is_diabetes,
             r.user_std_weight, r.user_std_kcal, r.user_std_carb_g, r.user_std_protein_g,
@@ -168,6 +170,7 @@
             
         FROM reports r
         JOIN users u ON r.user_id = u.id
+        LEFT JOIN users e ON r.expert_id = e.id
         LEFT JOIN meals m ON r.id = m.report_id
         LEFT JOIN meal_foods mf ON m.id = mf.meal_id
         LEFT JOIN foods f ON mf.food_code = f.code
@@ -300,6 +303,7 @@
     	SET
     	score = #{score},
     	character_id = #{characterId},
+    	expert_id = #{expertId},
     	comment = #{comment}
     	WHERE id = #{id}
     </update>

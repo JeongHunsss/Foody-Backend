@@ -407,6 +407,8 @@ public class ReportServiceImpl implements ReportService {
 		return ReportResponse.builder()
 				.id(report.getId())
 				.userId(report.getUserId())
+				.expertId(report.getExpertId())
+				.expertName(report.getExpertName())
 				.score(report.getScore())
 				.comment(report.getComment())
 				.characterId(report.getCharacterId())
