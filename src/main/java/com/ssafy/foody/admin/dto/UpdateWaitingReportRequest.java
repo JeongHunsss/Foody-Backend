@@ -17,18 +17,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UpdateWaitingReportRequest {
-	
-	@NotNull(message = "Report ID는 필수 값입니다.")
+
+	@NotNull(message = "레포트 ID는 필수 값입니다.")
 	private Integer id;
-	
+
 	@NotNull(message = "점수는 필수 값입니다")
 	@DecimalMin(value = "0.0", inclusive = true, message = "점수는 0 이상이어야 합니다")
 	@DecimalMax(value = "100.0", inclusive = true, message = "점수는 100 이하여야 합니다")
 	private double score;
-	
+
 	@PositiveOrZero(message = "올바르지 않은 캐릭터 ID입니다.")
 	private Integer characterId;
-	
+
 	@NotBlank(message = "코멘트 입력은 필수입니다.")
 	private String comment;
+
+	private String expertId;
 }

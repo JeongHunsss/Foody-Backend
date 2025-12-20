@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 public class Report {
     private int id; // PK
     private String userId; // FK
+    private String expertId; // FK (전문가 분석 시 저장)
+    private String expertName; // 전문가 이름
 
     // 분석 정보
     private Double score; // 점수
