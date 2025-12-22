@@ -40,7 +40,7 @@ public class ReportController {
     @PostMapping
     public ResponseEntity<String> createReport(
             @AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody @Valid ReportRequest request // ?�단 ?�이??
+            @RequestBody @Valid ReportRequest request
     ) {
         String userId = userDetails.getUsername();
         log.info("레포트 생성 요청 - User: {}", userId);
