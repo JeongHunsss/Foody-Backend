@@ -82,4 +82,7 @@ public interface ReportMapper {
     
     // 댓글 작성자 확인
     String findCommentAuthorById(int commentId);
+    
+    // 유저가 획득한 캐릭터 ID 목록 조회
+    List<Integer> findDistinctCharacterIdsByUserId(String userId);
 }

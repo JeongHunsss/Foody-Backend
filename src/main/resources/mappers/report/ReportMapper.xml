@@ -362,5 +362,13 @@
         FROM report_comments
         WHERE id = #{id}
     </select>
+    
+    <select id="findDistinctCharacterIdsByUserId" resultType="int">
+        SELECT DISTINCT character_id
+        FROM reports
+        WHERE user_id = #{userId} 
+          AND character_id IS NOT NULL
+          AND character_id > 0
+    </select>
 
 </mapper>
