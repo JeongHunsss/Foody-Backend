@@ -8,4 +8,14 @@
  		ai_learning_comment as aiLearningComment
  		from characters
  	</select>
+ 	
+ 	<select id="findCharactersByIds" resultType="FoodyCharacter">
+ 		SELECT id, name, img_url as img, description,
+ 		ai_learning_comment as aiLearningComment
+ 		FROM characters
+ 		WHERE id IN
+ 		<foreach item="item" collection="ids" open="(" separator="," close=")">
+ 			#{item}
+ 		</foreach>
+ 	</select>
  </mapper>

@@ -16,6 +16,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+
 @Slf4j
 @RestController
 @RequestMapping("/character")
@@ -34,6 +37,19 @@ public class CharacterController {
 			return ResponseEntity.noContent().build();
 		}
 
+		return ResponseEntity.ok(characterList);
+	}
+	
+	@Operation(summary = "내 캐릭터 도감 조회", description = "내가 획득한 캐릭터를 조회합니다.")
+	@GetMapping("/my-foody")
+	public ResponseEntity<List<CharacterResponse>> findMyCharacters(@AuthenticationPrincipal UserDetails userDetails) {
+		String userId = userDetails.getUsername();
+		List<CharacterResponse> characterList = characterService.findMyCharacters(userId);
+		
+		if (characterList == null || characterList.isEmpty()) {
+			return ResponseEntity.noContent().build();
+		}
+		
 		return ResponseEntity.ok(characterList);
 	}
 }

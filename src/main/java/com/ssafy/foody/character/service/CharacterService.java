@@ -9,4 +9,7 @@ public interface CharacterService {
 	// 푸디 캐릭터 조회
 	List<CharacterResponse> findAllCharacters();
 	
+	// 내 캐릭터 조회
+	List<CharacterResponse> findMyCharacters(String userId);
+
 }
