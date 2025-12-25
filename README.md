@@ -203,7 +203,7 @@ src/main/java/com/ssafy/foody/
 ## 🗄️ ER 다이어그램 (ER Diagram)
 ![ER Diagram](./github_asset/img/Foody_ER_Diagram.png)
 
-## 권장 영양소 계산법 (미플린 세인트 지어 공식)
+## 권장 영양소 계산법 (미플린-세인트 지어 공식 참고)
 
 - 표준 몸무게
 - 성별에 따른 계산 방식
@@ -219,7 +219,7 @@ src/main/java/com/ssafy/foody/
 \text{여성 =  }(\text{표준 몸무게} \times 10 + \text{본인 키} \times 6.25 - \text{본인 나이} \times 5 - 161) \times \text{활동 계수}\\
 \end{cases}
 ```
-- 활동 계수
+- 활동 계수 (해리스-베네딕트 공식 참고)
     - Level 1 => value = 1.2, description = 거의 안함 
     - Level 2 => value = 1.375, description = 가벼운 활동
     - Level 3 => value = 1.55, description = 보통 활동
